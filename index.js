@@ -14,6 +14,14 @@ const GITHUB_TOKEN_KEY = 'github-token'
     const token = core.getInput(GITHUB_TOKEN_KEY);
     const octokit = github.getOctokit(token)
 
+    const commits = await octokit.rest.repos.listCommits({
+      owner: github.context.payload.repository.owner.login,
+      repo: github.context.payload.repository.name,
+      sha: github.context.payload.pull_request.head.sha
+    })  
+
+    console.log(commits)
+
 
     const pull = await octokit.rest.pulls.get({ 
       owner: github.context.payload.repository.owner.login, 
