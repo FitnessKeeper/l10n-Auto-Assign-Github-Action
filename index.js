@@ -13,11 +13,12 @@ try {
   console.log(`The event payload: ${payload}`);
   const token = core.getInput(GITHUB_TOKEN_KEY);
   const octokit = github.getOctokit(token)
-  //get the login of the user who made the last commit with this action
-  const commit = octokit.repos.getCommit({  owner: github.context.repo.owner, repo: github.context.repo.repo, ref: github.context.sha }); 
-  const commitAuthor = commit.author.login;
-  console.log(`commit author: ${commitAuthor}`);
-
+  octokit.rest.issues.addAssignees({
+    owner: github.context.payload.repository.owner.login,
+    repo: github.context.payload.repository.name,
+    issue_number: githubcontext.payload.pull_request.number,
+    assignees: ['dcrelling']
+  });
 } catch (error) {
   core.setFailed(error.message);
 }
