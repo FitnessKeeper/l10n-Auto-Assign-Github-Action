@@ -17,18 +17,11 @@ const GITHUB_TOKEN_KEY = 'github-token'
     const commits = await octokit.rest.repos.listCommits({
       owner: github.context.payload.repository.owner.login,
       repo: github.context.payload.repository.name,
-      sha: github.context.payload.pull_request.head.sha
+      sha: github.context.payload.pull_request.head.sha,
+      since: github.context.payload.repository.created_at
     })  
 
     console.log(commits)
-
-
-    const pull = await octokit.rest.pulls.get({ 
-      owner: github.context.payload.repository.owner.login, 
-      repo: github.context.payload.repository.name, 
-      pull_number: github.context.payload.pull_request.number })
-    
-    console.log(pull)
 
     octokit.rest.issues.addAssignees({
       owner: github.context.payload.repository.owner.login,
