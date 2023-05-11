@@ -16,7 +16,7 @@ try {
   octokit.rest.issues.addAssignees({
     owner: github.context.payload.repository.owner.login,
     repo: github.context.payload.repository.name,
-    issue_number: githubcontext.payload.pull_request.number,
+    issue_number: github.context.payload.pull_request.number,
     assignees: ['dcrelling']
   });
 } catch (error) {
