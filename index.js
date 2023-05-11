@@ -13,6 +13,13 @@ const GITHUB_TOKEN_KEY = 'github-token'
     console.log(`The event payload: ${payload}`);
     const token = core.getInput(GITHUB_TOKEN_KEY);
     const octokit = github.getOctokit(token)
+    const pull = octokit.rest.pulls.get({ 
+      owner: github.context.payload.repository.owner.login, 
+      repo: github.context.payload.repository.name, 
+      pull_number: github.context.payload.pull_request.number })
+    
+    console.log(pull)
+
     octokit.rest.issues.addAssignees({
       owner: github.context.payload.repository.owner.login,
       repo: github.context.payload.repository.name,
