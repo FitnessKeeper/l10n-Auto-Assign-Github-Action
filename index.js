@@ -14,6 +14,8 @@ function hasExistingAssignees() {
  async function run() {
   try {
 
+    console.log('Running auto-assign action.')
+
     if (!isPullRequest()) {
       throw new Error(
         'No pull request found. The auto-assign action only works for pull requests.'
@@ -25,16 +27,19 @@ function hasExistingAssignees() {
       return
     }
 
-
     const l10nLogin = core.getInput('l10n-github-login');
-    console.log(`Hello ${l10nLogin}!`);
+    if (l10nLogin == null || l10nLogin == '') {
+      throw new Error(  'No l10n login found. The auto-assign action requires a l10n login.')
+    }
+
     const time = (new Date()).toTimeString();
     core.setOutput("time", time);
-    // Get the JSON webhook payload for the event that triggered the workflow
-    // const payload = JSON.stringify(github.context.payload, undefined, 2)
-    // console.log(`The event payload: ${payload}`);
-
+  
     const token = core.getInput(GITHUB_TOKEN_KEY);
+    if (token == null || token == '') {
+      throw new Error( 'No github token found. The auto-assign action requires a token.')
+    }
+
     const octokit = github.getOctokit(token)
 
     const commits = await getCommits(octokit)
@@ -54,6 +59,7 @@ function hasExistingAssignees() {
 }
 
 async function getCommits(octokit) {
+  console.log('Getting commits.')
   const commits = await octokit.rest.repos.listCommits({
     owner: github.context.payload.repository.owner.login,
     repo: github.context.payload.repository.name,
@@ -64,6 +70,7 @@ async function getCommits(octokit) {
 }
 
 function getAuthors(commits, l10nLogin) {
+  console.log('Getting authors.')
   const authors = []
   commits.data.forEach((commit) => {
     if (commit.author.login != l10nLogin) {
@@ -74,6 +81,7 @@ function getAuthors(commits, l10nLogin) {
 }
 
 async function assignAuthors(octokit, authors) {
+  console.log('Assigning authors.')
   octokit.rest.issues.addAssignees({
     owner: github.context.payload.repository.owner.login,
     repo: github.context.payload.repository.name,
