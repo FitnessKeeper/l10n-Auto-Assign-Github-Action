@@ -26,15 +26,13 @@ function hasExistingAssignees() {
     }
 
 
-
-
-    const nameToGreet = core.getInput('who-to-greet');
-    console.log(`Hello ${nameToGreet}!`);
+    const l10nLogin = core.getInput('l10n-github-login');
+    console.log(`Hello ${l10nLogin}!`);
     const time = (new Date()).toTimeString();
     core.setOutput("time", time);
     // Get the JSON webhook payload for the event that triggered the workflow
-    const payload = JSON.stringify(github.context.payload, undefined, 2)
-    console.log(`The event payload: ${payload}`);
+    // const payload = JSON.stringify(github.context.payload, undefined, 2)
+    // console.log(`The event payload: ${payload}`);
 
     const token = core.getInput(GITHUB_TOKEN_KEY);
     const octokit = github.getOctokit(token)
@@ -44,7 +42,7 @@ function hasExistingAssignees() {
      throw new Error( 'No commits found. The auto-assign action only works for pull requests with commits.')
     }
 
-    const authors = getAuthors(commits)
+    const authors = getAuthors(commits, l10nLogin)
     if (authors.length == 0) {
       throw new Error( 'No authors found. The auto-assign action only works for pull requests with authors.')
     }
@@ -65,10 +63,10 @@ async function getCommits(octokit) {
   return commits
 }
 
-function getAuthors(commits) {
+function getAuthors(commits, l10nLogin) {
   const authors = []
   commits.data.forEach((commit) => {
-    if (commit.author.login != 'rkcrowdinadmin') {
+    if (commit.author.login != l10nLogin) {
       authors.push(commit.author.login)
     }
   })

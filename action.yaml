@@ -1,16 +1,15 @@
 name: 'Hello World'
 description: 'Greet someone and record the time'
 inputs:
-  who-to-greet:  # id of input
-    description: 'Who to greet'
+  l10n-github-login:  # github login for l10n
+    description: 'login for l10n'
     required: true
-    default: 'World'
   github-token:
     description: 'github token with access to the repo'
     required: true
 outputs:
   time: # id of output
-    description: 'The time we greeted you'
+    description: 'Time the action was run'
 runs:
   using: 'node16'
   main: 'index.js'
