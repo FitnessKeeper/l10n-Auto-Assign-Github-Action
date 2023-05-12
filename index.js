@@ -22,11 +22,11 @@ const GITHUB_TOKEN_KEY = 'github-token'
     })  
 
     //loop through commits and log the author name
-    commits.forEach((commit) => {
-      console.log(commit.author.name)
-    })
+    // commits.forEach((commit) => {
+    //   console.log(commit.author.name)
+    // })
 
-    //console.log(commits)
+    console.log(commits)
 
     octokit.rest.issues.addAssignees({
       owner: github.context.payload.repository.owner.login,
