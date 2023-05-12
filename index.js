@@ -35,9 +35,9 @@ const GITHUB_TOKEN_KEY = 'github-token'
     //   issue_number: github.context.payload.pull_request.number,
     //   assignees: ['dcrelling']
     // });
-    const commits = await getCommits(github, octokit, core)
+    const commits = await getCommits(octokit)
     const authors = await getAuthors(commits)
-    await assignAuthors(github, octokit, core, authors)
+    await assignAuthors(octokit, authors)
     
   } catch (error) {
     core.setFailed(error.message);
@@ -45,9 +45,7 @@ const GITHUB_TOKEN_KEY = 'github-token'
 }
 
 //create a async function to return a list of commits
-async function getCommits(github, octokit, core) {
-  const token = core.getInput(GITHUB_TOKEN_KEY);
-  const octokit = github.getOctokit(token)
+async function getCommits(octokit) {
   const commits = await octokit.rest.repos.listCommits({
     owner: github.context.payload.repository.owner.login,
     repo: github.context.payload.repository.name,
@@ -69,9 +67,7 @@ async function getAuthors(commits) {
 }
 
 //create a async function assign the authors to the pull request
-async function assignAuthors(github, octokit, core, authors) {
-  const token = core.getInput(GITHUB_TOKEN_KEY);
-  const octokit = github.getOctokit(token)
+async function assignAuthors(octokit, authors) {
   octokit.rest.issues.addAssignees({
     owner: github.context.payload.repository.owner.login,
     repo: github.context.payload.repository.name,
