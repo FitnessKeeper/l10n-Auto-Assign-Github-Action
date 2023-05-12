@@ -11,10 +11,20 @@ function hasExistingAssignees() {
   return github.context.payload.pull_request.assignees.length > 0
 }
 
- async function run() {
+async function run() {
   try {
 
     console.log('Running auto-assign action.')
+
+    const time = (new Date()).toTimeString();
+    core.setOutput("time", time);
+
+    const token = core.getInput(GITHUB_TOKEN_KEY);
+    if (token == null || token == '') {
+      throw new Error('No github token found. The auto-assign action requires a token.')
+    }
+
+    const octokit = github.getOctokit(token)
 
     if (!isPullRequest()) {
       throw new Error(
@@ -23,33 +33,23 @@ function hasExistingAssignees() {
     }
 
     if (hasExistingAssignees()) {
-      core.info(`Pull request has existing assignees. Skipping.`)
+      console.log(`Pull request has existing assignees. Skipping.`)
       return
     }
 
     const l10nLogin = core.getInput('l10n-github-login');
     if (l10nLogin == null || l10nLogin == '') {
-      throw new Error(  'No l10n login found. The auto-assign action requires a l10n login.')
+      throw new Error('No l10n login found. The auto-assign action requires a l10n login.')
     }
-
-    const time = (new Date()).toTimeString();
-    core.setOutput("time", time);
-  
-    const token = core.getInput(GITHUB_TOKEN_KEY);
-    if (token == null || token == '') {
-      throw new Error( 'No github token found. The auto-assign action requires a token.')
-    }
-
-    const octokit = github.getOctokit(token)
 
     const commits = await getCommits(octokit)
     if (commits.data.length == 0) {
-     throw new Error( 'No commits found. The auto-assign action only works for pull requests with commits.')
+      throw new Error('No commits found. The auto-assign action only works for pull requests with commits.')
     }
 
     const authors = getAuthors(commits, l10nLogin)
     if (authors.length == 0) {
-      throw new Error( 'No authors found. The auto-assign action only works for pull requests with authors.')
+      throw new Error('No authors found. The auto-assign action only works for pull requests with authors.')
     }
 
     await assignAuthors(octokit, authors)
@@ -65,7 +65,7 @@ async function getCommits(octokit) {
     repo: github.context.payload.repository.name,
     sha: github.context.payload.pull_request.base.sha,
     since: github.context.payload.repository.created_at
-  })  
+  })
   return commits
 }
 
