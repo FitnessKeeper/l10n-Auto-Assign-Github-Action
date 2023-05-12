@@ -44,7 +44,7 @@ function hasExistingAssignees() {
      throw new Error( 'No commits found. The auto-assign action only works for pull requests with commits.')
     }
 
-    const authors = await getAuthors(commits)
+    const authors = getAuthors(commits)
     if (authors.length == 0) {
       throw new Error( 'No authors found. The auto-assign action only works for pull requests with authors.')
     }
@@ -65,7 +65,7 @@ async function getCommits(octokit) {
   return commits
 }
 
-async function getAuthors(commits) {
+function getAuthors(commits) {
   const authors = []
   commits.data.forEach((commit) => {
     if (commit.author.login != 'rkcrowdinadmin') {
