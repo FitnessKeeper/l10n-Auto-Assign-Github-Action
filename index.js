@@ -22,9 +22,10 @@ const GITHUB_TOKEN_KEY = 'github-token'
     })  
 
     //loop through commits and log the author name
-    // commits.forEach((commit) => {
-    //   console.log(commit.author.name)
-    // })
+    commits.data.forEach((commit) => {
+      console.log(commit.author.name)
+      console.log(commit.committer.name)
+    })
 
     console.log(commits)
 
