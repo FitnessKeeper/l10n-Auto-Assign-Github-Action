@@ -1,5 +1,5 @@
-name: 'Hello World'
-description: 'Greet someone and record the time'
+name: 'l10n Auto Assign'
+description: 'Assign a reviewer to a PR created by l10n bot'
 inputs:
   l10n-github-login:  # github login for l10n
     description: 'login for l10n'
