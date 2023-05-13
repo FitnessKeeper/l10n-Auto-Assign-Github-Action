@@ -59,8 +59,10 @@ async function run() {
 }
 
 async function getCommits(octokit) {
-  const created = github.context.payload.repository.created_at
-  const msg = `Getting commits since ${created}`
+  const date = new Date();
+  date.setDate(date.getDate() - 30);
+  const since = date.toISOString();
+  const msg = `Getting commits since ${since}`
   console.log(msg)
   const commits = await octokit.rest.repos.listCommits({
     owner: github.context.payload.repository.owner.login,
@@ -93,3 +95,5 @@ async function assignAuthors(octokit, authors) {
 }
 
 run();
+
+
