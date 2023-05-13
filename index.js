@@ -59,7 +59,9 @@ async function run() {
 }
 
 async function getCommits(octokit) {
-  console.log('Getting commits.')
+  const created = github.context.payload.repository.created_at
+  const msg = `Getting commits since ${created}`
+  console.log(msg)
   const commits = await octokit.rest.repos.listCommits({
     owner: github.context.payload.repository.owner.login,
     repo: github.context.payload.repository.name,
