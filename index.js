@@ -68,7 +68,7 @@ async function getCommits(octokit) {
     owner: github.context.payload.repository.owner.login,
     repo: github.context.payload.repository.name,
     sha: github.context.payload.pull_request.base.sha,
-    since: github.context.payload.repository.created_at
+    since: since
   })
   return commits
 }
