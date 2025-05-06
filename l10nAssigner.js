@@ -34,8 +34,14 @@ function getThirtyDaysAgo() {
 function getAuthors(commits, l10nLogin) {
   console.log('Getting authors.')
   const authors = []
-  commits.data.forEach((commit) => {
-    if (commit.author.login != l10nLogin) {
+  console.log('Commit authors (raw):')
+  commits.data.forEach((commit, idx) => {
+    if (commit.author && commit.author.login) {
+      console.log(`Commit #${idx}: author.login = ${commit.author.login}`)
+    } else {
+      console.log(`Commit #${idx}: author is null or has no login`, commit.author)
+    }
+    if (commit.author && commit.author.login && commit.author.login != l10nLogin) {
       authors.push(commit.author.login)
     }
   })
